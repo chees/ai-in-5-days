@@ -1,0 +1,56 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "cadastral_parcel_boundary_lookup",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Please fetch the official cadastral parcel boundaries and lot area for reference 5653214DF4955S located at latitude 41.505972, longitude 2.346806."}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "The cadastral parcel 5653214DF4955S in Premià de Dalt has an official land area of 3,897 m² with 4 boundary vertices."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "building_setback_envelope_calculation",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Calculate the allowable building footprint and maximum volume for a lot with 5m front setback, 3m rear setback, 3m side setbacks, and 12m height limit."}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "The building envelope calculation applies the front, rear, and lateral setbacks to determine the legal ground footprint and maximum volume."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "adjacent_parcel_assemblage",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "What are the adjacent parcels and total assemblage area for target parcel 5653214DF4955S?"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "Target parcel 5653214DF4955S is bordered by Lot 25 (North, 805 m²), Lot 04 (South, 2,825 m²), Lot 55 (East, 132 m²), and Lot 16 (West, 436 m²)."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "guided_error_recovery_out_of_bounds",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Check parcel for invalid latitude 142.5 and longitude 2.3."}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "Latitude 142.5 is outside the valid WGS84 range [-90.0, 90.0]. Please verify the coordinate and provide a valid latitude."}]
+        }
+      }
+    }
+  ]
+}
