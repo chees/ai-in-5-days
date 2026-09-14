@@ -15,8 +15,8 @@ class AppConfig(BaseModel):
     """Application configuration schema."""
     project_id: str = Field(default_factory=lambda: os.getenv("GOOGLE_CLOUD_PROJECT", "saycheese-playground"))
     region: str = Field(default_factory=lambda: os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"))
-    fast_model: str = Field(default_factory=lambda: os.getenv("FAST_MODEL", "gemini-2.5-flash"))
-    reasoning_model: str = Field(default_factory=lambda: os.getenv("REASONING_MODEL", "gemini-2.5-pro"))
+    fast_model: str = Field(default_factory=lambda: os.getenv("FAST_MODEL", "gemini-3.8-flash"))
+    reasoning_model: str = Field(default_factory=lambda: os.getenv("REASONING_MODEL", "gemini-3.8-flash"))
     use_secret_manager: bool = Field(default_factory=lambda: os.getenv("USE_SECRET_MANAGER", "false").lower() == "true")
     environment: str = Field(default_factory=lambda: os.getenv("ENV", "development"))
 

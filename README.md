@@ -12,31 +12,31 @@ Co-Architect uses a **Multi-Agent Coordinator** design with model routing, safet
 
 ```mermaid
 flowchart TD
-    User([Architect / User]) --> GuardrailIn[Input Guardrails & Safety Filter]
-    GuardrailIn --> Coordinator[Architectural Coordinator\n(gemini-2.5-pro)]
+    User(["Architect / User"]) --> GuardrailIn["Input Guardrails & Safety Filter"]
+    GuardrailIn --> Coordinator["Architectural Coordinator<br/>(gemini-3.8-flash)"]
     
-    subgraph Observability [Observability & Safety Layer]
-        Tracer[OpenTelemetry Tracer]
-        IntentTracker[Intent & Execution Gap Tracker]
-        Logger[Structured JSON Logger]
-        PIIScrubber[PII Scrubber]
+    subgraph Observability ["Observability & Safety Layer"]
+        Tracer["OpenTelemetry Tracer"]
+        IntentTracker["Intent & Execution Gap Tracker"]
+        Logger["Structured JSON Logger"]
+        PIIScrubber["PII Scrubber"]
     end
     
-    Coordinator -. Traced via .-> Observability
+    Coordinator -. "Traced via" .-> Observability
     
-    subgraph SubAgents [Specialized Subagents (gemini-2.5-flash)]
-        ParcelAgent[Parcel Plot Mapper Agent]
-        ZoningAgent[Building Zoning Auditor Agent]
+    subgraph SubAgents ["Specialized Subagents (gemini-3.8-flash)"]
+        ParcelAgent["Parcel Plot Mapper Agent"]
+        ZoningAgent["Building Zoning Auditor Agent"]
     end
 
-    Coordinator -->|Routes Geometry Query| ParcelAgent
-    Coordinator -->|Routes Code/Zoning Query| ZoningAgent
+    Coordinator -->|"Routes Geometry Query"| ParcelAgent
+    Coordinator -->|"Routes Code/Zoning Query"| ZoningAgent
     
-    subgraph Tools [Geospatial & Zoning Tools]
-        T1[fetch_cadastral_parcel_boundary]
-        T2[calculate_building_envelope_setbacks]
-        T3[query_adjacent_parcel_assemblage]
-        T4[generate_architectural_site_report]
+    subgraph Tools ["Geospatial & Zoning Tools"]
+        T1["fetch_cadastral_parcel_boundary"]
+        T2["calculate_building_envelope_setbacks"]
+        T3["query_adjacent_parcel_assemblage"]
+        T4["generate_architectural_site_report"]
     end
     
     ParcelAgent --> T1
@@ -44,17 +44,17 @@ flowchart TD
     ZoningAgent --> T2
     ZoningAgent --> T4
     
-    subgraph MemoryLayer [Context & State Management]
-        SessionStore[(Persistent Session Store\nSQLite sessions.db)]
-        Compactor[Sliding Window History Compactor]
-        AsyncMem[Async Background Memory Consolidation]
+    subgraph MemoryLayer ["Context & State Management"]
+        SessionStore[("Persistent Session Store<br/>SQLite sessions.db")]
+        Compactor["Sliding Window History Compactor"]
+        AsyncMem["Async Background Memory Consolidation"]
     end
     
     Coordinator <--> MemoryLayer
     
-    subgraph Governance [Governance & Compliance]
-        HITL{HITL Approval Checkpoint\nMunicipal Filing / Boundary Changes}
-        GuardrailOut[Output Policy & Feasibility Evaluator]
+    subgraph Governance ["Governance & Compliance"]
+        HITL{"HITL Approval Checkpoint<br/>Municipal Filing / Boundary Changes"}
+        GuardrailOut["Output Policy & Feasibility Evaluator"]
     end
     
     T2 --> HITL
@@ -79,7 +79,7 @@ This repository implements all 19 criteria across the 5 pillars of the **AI in 5
 | | 7 | State Management & Sessions | 5 / 5 | [`app/memory/session_store.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/memory/session_store.py) — `PersistentSessionStore` backed by SQLite (`sessions.db`) tracking multi-turn dialogs and parcel metadata. |
 | | 8 | Asynchronous / Background Tasks | 5 / 5 | [`app/memory/async_memory.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/memory/async_memory.py) — `AsyncMemoryManager` with background asyncio tasks for parcel memory consolidation and spatial indexing. |
 | **3. Orchestration & Logic** | 9 | Multi-Agent Orchestration | 5 / 5 | [`app/agent.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/agent.py) — ADK Coordinator delegating to `parcel_plot_mapper_agent` and `building_zoning_auditor_agent`. |
-| | 10 | Model Routing & Specialization | 5 / 5 | [`app/agent.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/agent.py) — Specialized subagents use fast `gemini-2.5-flash`; top-level architectural reasoning uses `gemini-2.5-pro`. |
+| | 10 | Model Routing & Specialization | 5 / 5 | [`app/agent.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/agent.py) — Configured with `gemini-3.8-flash` with decoupled multi-agent routing between specialized subagents and top-level coordinator. |
 | | 11 | Content Safety & Guardrails | 5 / 5 | [`app/guardrails/policy.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/guardrails/policy.py) — Coordinate bounding checks, prompt injection detection, and post-generation architectural safety evaluation. |
 | | 12 | Human-in-the-Loop Approval | 5 / 5 | [`app/hitl/approval.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/hitl/approval.py) — `HumanInTheLoopCheckpoint` enforcing approval gates for high-stakes municipal zoning filings and boundary shifts. |
 | **4. Observability & Tracing** | 13 | Structured Logging & Auditing | 5 / 5 | [`app/observability/logging.py`](file:///usr/local/google/home/saycheese/projects/ai-in-5-days/app/observability/logging.py) — JSON structured logging via `structlog` with automated timestamping and context binding. |
